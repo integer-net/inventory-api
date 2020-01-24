@@ -1,0 +1,23 @@
+{
+  "name": "integer-net/inventory-api",
+  "description": "Inventory API prototype",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "autoload": {
+    "psr-4": {
+      "IntegerNet\\InventoryApi\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Fabian Schmengler",
+      "email": "fs@integer-net.de"
+    }
+  ],
+  "require": {
+    "react/react": "v1.0.0",
+    "react/http": "v0.8.6",
+    "psr/http-server-handler": "1.0.1",
+    "ext-json": "*"
+  }
+}
