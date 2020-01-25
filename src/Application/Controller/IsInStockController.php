@@ -3,12 +3,22 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Application\Controller;
 
-use Psr\Http\Message\RequestInterface;
+use IntegerNet\InventoryApi\Domain\Inventory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class IsInStockController
 {
+    /**
+     * @var Inventory
+     */
+    private $inventory;
+
+    public function __construct(Inventory $inventory)
+    {
+        $this->inventory = $inventory;
+    }
+
     public function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $skus = (array)($request->getQueryParams()['skus'] ?? []);
@@ -31,6 +41,11 @@ class IsInStockController
 
     private function isInStock(string $sku): bool
     {
-        return (bool)random_int(0, 1);
+        if ($this->inventory->hasSku($sku)) {
+            return $this->inventory->getBySku($sku)->isInStock();
+        }
+
+        //TODO exception handling
+        return false;
     }
 }

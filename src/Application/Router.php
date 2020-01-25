@@ -13,6 +13,21 @@ use function RingCentral\Psr7\stream_for;
 
 class Router implements RequestHandlerInterface
 {
+    /**
+     * @var IsInStockController
+     */
+    private $isInStockController;
+    /**
+     * @var EventController
+     */
+    private $eventController;
+
+    public function __construct(IsInStockController $isInStockController, EventController $eventController)
+    {
+        $this->isInStockController = $isInStockController;
+        $this->eventController = $eventController;
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $response = new Response(
@@ -26,8 +41,7 @@ class Router implements RequestHandlerInterface
                 case 'GET':
                     switch (trim($request->getUri()->getPath(), '/')) {
                         case 'is_in_stock':
-                            $controller = new IsInStockController();
-                            $response = $controller->execute($request, $response);
+                            $response = $this->isInStockController->execute($request, $response);
                             break;
                         default:
                             $response = $response->withStatus(404)->withBody(
@@ -38,8 +52,7 @@ class Router implements RequestHandlerInterface
                 case 'POST':
                     switch (trim($request->getUri()->getPath(), '/')) {
                         case 'event':
-                            $controller = new EventController();
-                            $response = $controller->execute($request, $response);
+                            $response = $this->eventController->execute($request, $response);
                             break;
                         default:
                             $response = $response->withStatus(404)->withBody(

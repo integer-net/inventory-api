@@ -8,6 +8,11 @@
       "IntegerNet\\InventoryApi\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "IntegerNet\\InventoryApi\\": "tests/src/"
+    }
+  },
   "authors": [
     {
       "name": "Fabian Schmengler",
@@ -19,5 +24,9 @@
     "react/http": "v0.8.6",
     "psr/http-server-handler": "1.0.1",
     "ext-json": "*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master",
+    "phpunit/phpunit": "8.5.2"
   }
 }

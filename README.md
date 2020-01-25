@@ -33,6 +33,19 @@ POST /event
 }
 ```
 
+Set stock qty to specific value:
+
+```
+POST /event
+{
+  'name' => 'qty_set'
+  'payload' => {
+    'sku' => 'sku1',
+    'value' => 123
+  }
+}
+```
+
 Response
 ```
 {

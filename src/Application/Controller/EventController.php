@@ -3,25 +3,54 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Application\Controller;
 
+use IntegerNet\InventoryApi\Application\EventBus;
+use IntegerNet\InventoryApi\Domain\QtyChanged;
+use IntegerNet\InventoryApi\Domain\QtySet;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class EventController
 {
+    /**
+     * @var EventBus
+     */
+    private $eventBus;
+
+    public function __construct(EventBus $eventBus)
+    {
+        $this->eventBus = $eventBus;
+    }
+
     public function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $result = ['success' => true];
         $requestBody = $request->getBody()->getContents();
-        $jsonRequest = \json_decode($requestBody);
+        $jsonRequest = \json_decode($requestBody, true);
         if ($jsonRequest === null) {
             $result['success'] = false;
             $result['message'] = \json_last_error_msg();
             $response = $response->withStatus(400);
         }
         $result['request'] = $jsonRequest;
+        try {
+            switch ($jsonRequest['name']) {
+                case 'qty_change':
+                    $this->eventBus->dispatch(
+                        new QtyChanged($jsonRequest['payload']['sku'], $jsonRequest['payload']['difference'])
+                    );
+                    break;
+                case 'qty_set':
+                    $this->eventBus->dispatch(
+                        new QtySet($jsonRequest['payload']['sku'], $jsonRequest['payload']['qty'])
+                    );
+                    break;
+            }
 
-        //TODO create Event from JSON
-        //     dispatch event
+        } catch (\Exception $e) {
+            $result['success'] = false;
+            $result['message'] = $e->getMessage();
+            $response = $response->withStatus(500);
+        }
 
         $json = \json_encode($result);
         $response = $response->withBody(
