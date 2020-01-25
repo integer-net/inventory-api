@@ -1,21 +1,16 @@
 <?xml version="1.0"?>
 <phpunit cacheTokens="true"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         stopOnError="false"
-         stopOnFailure="false"
-         stopOnIncomplete="false"
-         stopOnSkipped="false"
-         strict="false"
-         verbose="false">
-    <testsuite name="unit">
-        <directory suffix=".php">tests/unit</directory>
-    </testsuite>
-    <testsuite name="integration">
-        <directory suffix=".php">tests/integration</directory>
-    </testsuite>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
+         colors="true">
+    <testsuites>
+        <testsuite name="unit">
+            <directory suffix=".php">tests/unit</directory>
+        </testsuite>
+        <testsuite name="integration">
+            <directory suffix=".php">tests/integration</directory>
+        </testsuite>
+    </testsuites>
     <filter>
         <whitelist>
             <directory suffix=".php">src</directory>
@@ -24,7 +19,7 @@
     <logging>
         <log type="tap" target="build/report.tap"/>
         <log type="junit" target="build/report.junit.xml"/>
-        <log type="coverage-html" target="build/coverage" charset="UTF-8" yui="true" highlight="true"/>
+        <log type="coverage-html" target="build/coverage" />
         <log type="coverage-text" target="build/coverage.txt"/>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>

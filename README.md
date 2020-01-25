@@ -1,3 +1,11 @@
+# Run
+
+To run the server on localhost:8000, start the following as background process:
+
+```
+php public/index.php 0.0.0.0:8000
+```
+
 # API Usage
 
 Request stock status for skus:
