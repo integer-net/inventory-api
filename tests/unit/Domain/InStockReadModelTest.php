@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace unit\Domain;
+namespace IntegerNet\InventoryApi\Domain;
 
-use IntegerNet\InventoryApi\Domain\InStockReadModel;
 use PHPUnit\Framework\TestCase;
 
 class InStockReadModelTest extends TestCase
