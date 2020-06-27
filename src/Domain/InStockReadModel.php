@@ -8,8 +8,6 @@ namespace IntegerNet\InventoryApi\Domain;
  * based on the event stream
  *
  * @see https://eventsauce.io/docs/reacting-to-events/projections-and-read-models/
- *
- * @todo the is_in_stock decision should rather be responsibility of the InventoryItem model. The model can be used here
  */
 class InStockReadModel
 {
@@ -23,6 +21,7 @@ class InStockReadModel
     public function isInStock(string $sku)
     {
         //TODO throw exception if SKU not known?
-        return ($this->qtys[$sku] ?? 0) > 0;
+        $qty = $this->qtys[$sku] ?? 0;
+        return (new InventoryItem($sku, $qty))->isInStock();
     }
 }

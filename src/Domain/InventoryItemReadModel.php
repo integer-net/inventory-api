@@ -5,6 +5,8 @@ namespace IntegerNet\InventoryApi\Domain;
 
 /**
  * Read-only inventory item, can be used safely outside of the Inventory aggregate
+ *
+ * @todo InventoryItem can be considered a value object, make it immutable and we don't need the separate read model anymore
  */
 class InventoryItemReadModel implements InventoryItemInterface
 {
