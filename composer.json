@@ -23,6 +23,7 @@
     }
   ],
   "require": {
+    "php": "^7.4",
     "react/react": "v1.0.0",
     "react/http": "v0.8.6",
     "psr/http-server-handler": "1.0.1",
