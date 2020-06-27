@@ -29,7 +29,7 @@ class InventoryTest extends TestCase
     {
         $this->markTestSkipped('Currently refactoring, event bus not compatible');
         $sku = 'number-of-the-beast';
-        $this->eventBus->dispatch(new QtySet($sku, 666));
+        $this->eventBus->_dispatch(new QtySet($sku, 666));
         $this->assertEquals(
             new InventoryItem(InventoryItemId::new(), $sku, 666),
             $this->inventory->getBySku($sku)
@@ -40,8 +40,8 @@ class InventoryTest extends TestCase
         $this->markTestSkipped('Currently refactoring, event bus not compatible');
         $sku = 'answer-to-life';
 
-        $this->eventBus->dispatch(new QtySet($sku, 40));
-        $this->eventBus->dispatch(new QtyChanged($sku, 2));
+        $this->eventBus->_dispatch(new QtySet($sku, 40));
+        $this->eventBus->_dispatch(new QtyChanged($sku, 2));
         $this->assertEquals(
             new InventoryItem(InventoryItemId::new(), $sku, 42),
             $this->inventory->getBySku($sku)

@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Domain;
 
+use IntegerNet\InventoryApi\Domain\Process\QtyChanged as QtyHasChanged;
+use IntegerNet\InventoryApi\Domain\Process\QtySet as QtyHasBeenSet;
+
 class Inventory
 {
     /**
@@ -18,7 +21,7 @@ class Inventory
      */
     public function qtyChangedHandler(): callable
     {
-        return function (QtyChanged $event) {
+        return function (QtyHasChanged $event) {
             $this->getBySku($event->sku())->addQty($event->difference());
         };
     }
@@ -30,7 +33,7 @@ class Inventory
      */
     public function qtySetHandler(): callable
     {
-        return function (QtySet $event) {
+        return function (QtyHasBeenSet $event) {
             if (! $this->hasSku($event->sku())) {
                 $this->items[$event->sku()] = new InventoryItem(
                     InventoryItemId::new(),

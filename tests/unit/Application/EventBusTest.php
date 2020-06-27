@@ -49,7 +49,7 @@ class EventBusTest extends TestCase
 
     private function whenEventIsDispatched($event): void
     {
-        $this->eventBus->dispatch($event);
+        $this->eventBus->_dispatch($event);
     }
 
     private function thenObserverHasBeenCalledWith($event, CallableMock $observer): void

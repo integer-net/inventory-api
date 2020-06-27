@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace IntegerNet\InventoryApi\Application;
 
 use IntegerNet\InventoryApi\Domain\Inventory;
-use IntegerNet\InventoryApi\Domain\QtyChanged;
-use IntegerNet\InventoryApi\Domain\QtySet;
+use IntegerNet\InventoryApi\Domain\Process\QtyChanged;
+use IntegerNet\InventoryApi\Domain\Process\QtySet;
 
 /**
  * The router is the main application entry point. This factory is wiring its dependencies
