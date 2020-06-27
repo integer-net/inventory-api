@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace IntegerNet\InventoryApi\Application;
 
 use IntegerNet\InventoryApi\CallableMock;
-use IntegerNet\InventoryApi\Domain\QtyChanged;
-use IntegerNet\InventoryApi\Domain\QtySet;
+use IntegerNet\InventoryApi\Domain\Process\QtyChanged;
+use IntegerNet\InventoryApi\Domain\Process\QtySet;
 use PHPUnit\Framework\TestCase;
 
 class EventBusTest extends TestCase

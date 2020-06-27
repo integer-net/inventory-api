@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Domain;
 
+use IntegerNet\InventoryApi\Domain\Process\QtyChanged as QtyHasChanged;
+use IntegerNet\InventoryApi\Domain\Process\QtySet as QtyHasBeenSet;
 use IntegerNet\InventoryApi\Application\EventBus;
+use EventSauce\EventSourcing\Header;
+use EventSauce\EventSourcing\MessageDispatchingEventDispatcher;
 use PHPUnit\Framework\TestCase;
 
 class InventoryTest extends TestCase
@@ -12,26 +16,27 @@ class InventoryTest extends TestCase
      * @var Inventory
      */
     private $inventory;
-    /**
-     * @var EventBus
-     */
-    private $eventBus;
+
+    private MessageDispatchingEventDispatcher $eventDispatcher;
 
     protected function setUp(): void
     {
         $this->inventory = new Inventory();
-        $this->eventBus = new EventBus();
-        $this->eventBus->subscribe(QtySet::class, $this->inventory->qtySetHandler());
-        $this->eventBus->subscribe(QtyChanged::class, $this->inventory->qtyChangedHandler());
+        $eventBus = new EventBus();
+        $eventBus->subscribe(QtyHasBeenSet::class, $this->inventory->qtySetHandler());
+        $eventBus->subscribe(QtyHasChanged::class, $this->inventory->qtyChangedHandler());
+        $this->eventDispatcher = new MessageDispatchingEventDispatcher(
+            $eventBus,
+        );
     }
 
     public function testItemIsCreatedOnQtySetEvent()
     {
         $this->markTestSkipped('Currently refactoring, event bus not compatible');
         $sku = 'number-of-the-beast';
-        $this->eventBus->_dispatch(new QtySet($sku, 666));
+        $this->eventDispatcher->dispatch(new QtyHasBeenSet($sku, 666));
         $this->assertEquals(
-            new InventoryItem(InventoryItemId::new(), $sku, 666),
+            (new InventoryItem(InventoryItemId::new(), $sku, 666)),
             $this->inventory->getBySku($sku)
         );
     }
@@ -40,8 +45,8 @@ class InventoryTest extends TestCase
         $this->markTestSkipped('Currently refactoring, event bus not compatible');
         $sku = 'answer-to-life';
 
-        $this->eventBus->_dispatch(new QtySet($sku, 40));
-        $this->eventBus->_dispatch(new QtyChanged($sku, 2));
+        $this->eventDispatcher->dispatch(new QtyHasBeenSet($sku, 40));
+        $this->eventDispatcher->dispatch(new QtyHasChanged($sku, 2));
         $this->assertEquals(
             new InventoryItem(InventoryItemId::new(), $sku, 42),
             $this->inventory->getBySku($sku)

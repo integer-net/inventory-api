@@ -1,12 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace IntegerNet\RedmineSync\IntegerNet\InventoryApi\Domain;
+namespace IntegerNet\InventoryApi\Domain;
 
-use IntegerNet\InventoryApi\Domain\InventoryItem;
-use IntegerNet\InventoryApi\Domain\InventoryItemId;
-use IntegerNet\InventoryApi\Domain\Process\QtyChanged;
-use IntegerNet\InventoryApi\Domain\Process\QtySet;
+use IntegerNet\InventoryApi\Domain\Process\QtyChanged as QtyHasChanged;
+use IntegerNet\InventoryApi\Domain\Process\QtySet as QtyHasBeenSet;
 use PHPUnit\Framework\TestCase;
 
 class InventoryItemTest extends TestCase
@@ -62,8 +60,8 @@ class InventoryItemTest extends TestCase
         $events = $this->inventoryItem->releaseEvents();
         $this->assertEquals(
             [
-                new QtyChanged(self::SKU, 1),
-                new QtyChanged(self::SKU, 2),
+                new QtyHasChanged(self::SKU, 1),
+                new QtyHasChanged(self::SKU, 2),
             ],
             $events
         );
@@ -89,8 +87,8 @@ class InventoryItemTest extends TestCase
         $events = $this->inventoryItem->releaseEvents();
         $this->assertEquals(
             [
-                new QtySet(self::SKU, 10),
-                new QtySet(self::SKU, 5),
+                new QtyHasBeenSet(self::SKU, 10),
+                new QtyHasBeenSet(self::SKU, 5),
             ],
             $events
         );
