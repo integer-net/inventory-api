@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace IntegerNet\InventoryApi\Application\Controller;
 
 use EventSauce\EventSourcing\AggregateRootRepository;
+use IntegerNet\InventoryApi\Domain\InStockReadModel;
 use IntegerNet\InventoryApi\Domain\Inventory;
 use IntegerNet\InventoryApi\Domain\InventoryId;
 use IntegerNet\InventoryApi\Domain\InventoryRepository;
@@ -13,14 +14,11 @@ use function RingCentral\Psr7\stream_for;
 
 class IsInStockController
 {
-    /**
-     * @see EventController::$inventory
-     */
-    private Inventory $inventory;
+    private InStockReadModel $inStockReadModel;
 
-    public function __construct(Inventory $inventory)
+    public function __construct(InStockReadModel $inStockReadModel)
     {
-        $this->inventory = $inventory;
+        $this->inStockReadModel = $inStockReadModel;
     }
 
     public function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
@@ -42,11 +40,6 @@ class IsInStockController
 
     private function isInStock(string $sku): bool
     {
-        if ($this->inventory->hasSku($sku)) {
-            return $this->inventory->getBySku($sku)->isInStock();
-        }
-
-        //TODO return n/a item for nonexisting skus
-        return false;
+        return $this->inStockReadModel->isInStock($sku);
     }
 }

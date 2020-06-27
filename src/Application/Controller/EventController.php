@@ -23,14 +23,17 @@ class EventController
      *
      * When multiple inventories should be supported, we can change this into something like an InventoryPool with
      * loaded inventories
-     *
-     * @var Inventory
      */
     private Inventory $inventory;
+    /**
+     * The repository is used to persist events after executing a controller action
+     */
+    private AggregateRootRepository $inventoryRepository;
 
-    public function __construct(Inventory $inventory)
+    public function __construct(AggregateRootRepository $inventoryRepository, Inventory $inventory)
     {
         $this->inventory = $inventory;
+        $this->inventoryRepository = $inventoryRepository;
     }
 
     public function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
@@ -61,6 +64,7 @@ class EventController
                     );
                     break;
             }
+            $this->inventoryRepository->persist($this->getInventory());
 
         } catch (\Exception $e) {
             $result['success'] = false;
@@ -77,7 +81,7 @@ class EventController
 
     }
 
-    private function getInventory(): object
+    private function getInventory(): Inventory
     {
         return $this->inventory;
     }

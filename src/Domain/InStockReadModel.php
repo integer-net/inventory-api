@@ -22,6 +22,7 @@ class InStockReadModel
 
     public function isInStock(string $sku)
     {
+        //TODO throw exception if SKU not known?
         return ($this->qtys[$sku] ?? 0) > 0;
     }
 }

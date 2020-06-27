@@ -116,6 +116,5 @@ For eventual consistency the QtySet event is a problem. I.e. when events are sto
 
 #### Next refactoring steps
 
-- create read model for inventory items
 - make items private in inventory, return read model in getBySku if needed
 - finally remove getBySku and always use read model from projector
