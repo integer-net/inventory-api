@@ -28,5 +28,4 @@ class InStockProjection implements Consumer
             $this->inStockReadModel->updateQty($event->sku(), $event->difference());
         }
     }
-
 }

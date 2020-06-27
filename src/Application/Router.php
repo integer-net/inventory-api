@@ -70,5 +70,4 @@ class Router implements RequestHandlerInterface
             return $response->withStatus(500)->withBody(stream_for(\json_encode(['message' => $e->getMessage()])));
         }
     }
-
 }

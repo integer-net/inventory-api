@@ -30,5 +30,4 @@ class InventoryId implements AggregateRootId
     {
         return self::fromString(self::DEFAULT);
     }
-
 }

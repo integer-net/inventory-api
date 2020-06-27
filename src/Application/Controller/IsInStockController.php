@@ -26,5 +26,4 @@ class IsInStockController
 
         return $response->withBody(stream_for(\json_encode($result)));
     }
-
 }

@@ -63,7 +63,6 @@ class EventController
                     break;
             }
             $this->inventoryRepository->persist($this->getInventory());
-
         } catch (\Exception $e) {
             $result['success'] = false;
             $result['message'] = $e->getMessage();
@@ -76,7 +75,6 @@ class EventController
         );
 
         return $response;
-
     }
 
     private function getInventory(): Inventory
