@@ -25,27 +25,39 @@ class IsInStockControllerTest extends TestCase
         $this->router = RouterFactory::create();
     }
 
-    public function testReturnsNotInStockForNonexistingSku()
+    /**
+     * @test
+     */
+    public function returns_not_in_stock_with_error_for_nonexisting_sku()
     {
         $this->whenControllerCalledWithParams(['skus' => ['sku_1']]);
-        $this->thenResponseShouldBe([['sku' => 'sku_1', 'is_in_stock' => false]]);
+        $this->thenResponseShouldBe([['sku' => 'sku_1', 'is_in_stock' => false, 'error' => true]]);
     }
 
-    public function testReturnsInStockForExistingSkuWithPositiveQty()
+    /**
+     * @test
+     */
+    public function returns_in_stock_for_existing_sku_with_positive_qty()
     {
         $this->givenInventoryStatus(['sku_1' => 10]);
         $this->whenControllerCalledWithParams(['skus' => ['sku_1']]);
         $this->thenResponseShouldBe([['sku' => 'sku_1', 'is_in_stock' => true]]);
     }
 
-    public function testReturnsNotInStockForExistingSkuWithZeroQty()
+    /**
+     * @test
+     */
+    public function returns_not_in_stock_for_existing_sku_with_zero_qty()
     {
         $this->givenInventoryStatus(['sku_1' => 0]);
         $this->whenControllerCalledWithParams(['skus' => ['sku_1']]);
         $this->thenResponseShouldBe([['sku' => 'sku_1', 'is_in_stock' => false]]);
     }
 
-    public function testReturnsResultAfterUpdatingQty()
+    /**
+     * @test
+     */
+    public function returns_new_result_after_updating_qty()
     {
         $this->givenInventoryStatus(['sku_1' => 1]);
         $this->post(
@@ -59,7 +71,10 @@ class IsInStockControllerTest extends TestCase
         $this->thenResponseShouldBe([['sku' => 'sku_1', 'is_in_stock' => false]]);
     }
 
-    public function testReturnsResultForMultipleSkus()
+    /**
+     * @test
+     */
+    public function returns_result_for_multiple_skus()
     {
         $this->givenInventoryStatus(
             [

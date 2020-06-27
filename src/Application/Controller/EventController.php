@@ -3,22 +3,35 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Application\Controller;
 
-use IntegerNet\InventoryApi\Application\EventBus;
-use IntegerNet\InventoryApi\Domain\QtyChanged;
-use IntegerNet\InventoryApi\Domain\QtySet;
+use EventSauce\EventSourcing\AggregateRootRepository;
+use IntegerNet\InventoryApi\Application\Service\ChangeQty;
+use IntegerNet\InventoryApi\Application\Service\SetQty;
+use IntegerNet\InventoryApi\Domain\Inventory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @deprecated use inventory end points instead
+ */
 class EventController
 {
     /**
-     * @var EventBus
+     * We pass the inventory here directly because it should have already been loaded at application startup and
+     * the default aggregate root repository implementation always recreates the aggregate based on persisted events.
+     *
+     * When multiple inventories should be supported, we can change this into something like an InventoryPool with
+     * loaded inventories
      */
-    private $eventBus;
+    private Inventory $inventory;
+    /**
+     * The repository is used to persist events after executing a controller action
+     */
+    private AggregateRootRepository $inventoryRepository;
 
-    public function __construct(EventBus $eventBus)
+    public function __construct(AggregateRootRepository $inventoryRepository, Inventory $inventory)
     {
-        $this->eventBus = $eventBus;
+        $this->inventory = $inventory;
+        $this->inventoryRepository = $inventoryRepository;
     }
 
     public function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
@@ -35,16 +48,21 @@ class EventController
         try {
             switch ($jsonRequest['name']) {
                 case 'qty_change':
-                    $this->eventBus->dispatch(
-                        new QtyChanged($jsonRequest['payload']['sku'], $jsonRequest['payload']['difference'])
+                    (new ChangeQty())->execute(
+                        $this->getInventory(),
+                        $jsonRequest['payload']['sku'],
+                        $jsonRequest['payload']['difference']
                     );
                     break;
                 case 'qty_set':
-                    $this->eventBus->dispatch(
-                        new QtySet($jsonRequest['payload']['sku'], $jsonRequest['payload']['qty'])
+                    (new SetQty())->execute(
+                        $this->getInventory(),
+                        $jsonRequest['payload']['sku'],
+                        $jsonRequest['payload']['qty']
                     );
                     break;
             }
+            $this->inventoryRepository->persist($this->getInventory());
 
         } catch (\Exception $e) {
             $result['success'] = false;
@@ -59,5 +77,10 @@ class EventController
 
         return $response;
 
+    }
+
+    private function getInventory(): Inventory
+    {
+        return $this->inventory;
     }
 }

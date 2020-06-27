@@ -3,46 +3,47 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Domain;
 
-use IntegerNet\InventoryApi\Application\EventBus;
+use IntegerNet\InventoryApi\Domain\Process\QtyChanged as QtyHasChanged;
 use PHPUnit\Framework\TestCase;
 
 class InventoryTest extends TestCase
 {
+    private const SKU = 'sku-1';
     /**
      * @var Inventory
      */
     private $inventory;
-    /**
-     * @var EventBus
-     */
-    private $eventBus;
 
     protected function setUp(): void
     {
-        $this->inventory = new Inventory();
-        $this->eventBus = new EventBus();
-        $this->eventBus->subscribe(QtySet::class, $this->inventory->qtySetHandler());
-        $this->eventBus->subscribe(QtyChanged::class, $this->inventory->qtyChangedHandler());
+        $this->inventory = Inventory::new(InventoryId::default());
     }
 
-    public function testItemIsCreatedOnQtySetEvent()
+    /**
+     * @test
+     */
+    public function can_change_item_qty()
     {
-        $sku = 'number-of-the-beast';
-        $this->eventBus->dispatch(new QtySet($sku, 666));
-        $this->assertEquals(
-            new InventoryItem($sku, 666),
-            $this->inventory->getBySku($sku)
-        );
+        $this->inventory->addQty(self::SKU, 12);
+        $this->inventory->addQty(self::SKU, 30);
+        $this->assertEquals(42, $this->inventory->getItemBySku(self::SKU)->qty());
     }
-    public function testIsUpdatedOnQtyChangeEvent()
-    {
-        $sku = 'answer-to-life';
 
-        $this->eventBus->dispatch(new QtySet($sku, 40));
-        $this->eventBus->dispatch(new QtyChanged($sku, 2));
+    /**
+     * @test
+     */
+    public function records_qty_change_events()
+    {
+        $this->inventory->addQty(self::SKU, 1);
+        $this->inventory->addQty(self::SKU, 2);
+        $events = $this->inventory->releaseEvents();
         $this->assertEquals(
-            new InventoryItem($sku, 42),
-            $this->inventory->getBySku($sku)
+            [
+                new QtyHasChanged(self::SKU, 1),
+                new QtyHasChanged(self::SKU, 2),
+            ],
+            $events
         );
     }
+
 }

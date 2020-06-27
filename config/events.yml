@@ -1,0 +1,11 @@
+## Generated code for events and commands (from eventsauce)
+## To generate code, run:
+##
+##    vendor/bin/robo generate:events
+namespace: IntegerNet\InventoryApi\Domain\Process
+
+events:
+  QtyChanged:
+    fields:
+      sku: string
+      difference: int

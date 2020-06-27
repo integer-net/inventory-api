@@ -3,47 +3,28 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Application\Controller;
 
-use IntegerNet\InventoryApi\Domain\Inventory;
+use IntegerNet\InventoryApi\Application\Service\GetStockStatus;
+use IntegerNet\InventoryApi\Domain\InStockReadModel;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use function RingCentral\Psr7\stream_for;
 
 class IsInStockController
 {
-    /**
-     * @var Inventory
-     */
-    private $inventory;
+    private InStockReadModel $inStockReadModel;
 
-    public function __construct(Inventory $inventory)
+    public function __construct(InStockReadModel $inStockReadModel)
     {
-        $this->inventory = $inventory;
+        $this->inStockReadModel = $inStockReadModel;
     }
 
     public function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $skus = (array)($request->getQueryParams()['skus'] ?? []);
-
-        //TODO extract the following statement to a service
-        $result = array_map(function ($sku) {
-                return [
-                    'sku' => $sku,
-                    'is_in_stock' => $this->isInStock($sku),
-                ];
-            },
-            $skus
-        );
+        $skus = array_map('strval', $skus);
+        $result = (new GetStockStatus($this->inStockReadModel))->execute(...$skus);
 
         return $response->withBody(stream_for(\json_encode($result)));
     }
 
-    private function isInStock(string $sku): bool
-    {
-        if ($this->inventory->hasSku($sku)) {
-            return $this->inventory->getBySku($sku)->isInStock();
-        }
-
-        //TODO return n/a item for nonexisting skus
-        return false;
-    }
 }
