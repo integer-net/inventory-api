@@ -13,6 +13,7 @@ class Inventory
     /**
      * Event handler that takes a QtyChanged event and updates the inventory
      *
+     * @todo extract each event handler to a service
      * @return callable
      */
     public function qtyChangedHandler(): callable
