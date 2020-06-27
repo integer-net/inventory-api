@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Application\Controller;
 
-use IntegerNet\InventoryApi\Application\EventBus;
+use EventSauce\EventSourcing\EventDispatcher;
+use IntegerNet\InventoryApi\Application\SubscribableMessageDispatcher;
 use IntegerNet\InventoryApi\Domain\Process\QtyChanged;
 use IntegerNet\InventoryApi\Domain\Process\QtySet;
 use Psr\Http\Message\ResponseInterface;
@@ -12,13 +13,13 @@ use Psr\Http\Message\ServerRequestInterface;
 class EventController
 {
     /**
-     * @var EventBus
+     * @var EventDispatcher
      */
-    private $eventBus;
+    private $eventDispatcher;
 
-    public function __construct(EventBus $eventBus)
+    public function __construct(EventDispatcher $eventDispatcher)
     {
-        $this->eventBus = $eventBus;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
@@ -35,12 +36,12 @@ class EventController
         try {
             switch ($jsonRequest['name']) {
                 case 'qty_change':
-                    $this->eventBus->_dispatch(
+                    $this->eventDispatcher->dispatch(
                         QtyChanged::fromPayload($jsonRequest['payload'])
                     );
                     break;
                 case 'qty_set':
-                    $this->eventBus->_dispatch(
+                    $this->eventDispatcher->dispatch(
                         QtySet::fromPayload($jsonRequest['payload'])
                     );
                     break;

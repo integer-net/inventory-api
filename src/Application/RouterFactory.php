@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Application;
 
+use EventSauce\EventSourcing\MessageDispatchingEventDispatcher;
 use IntegerNet\InventoryApi\Domain\Inventory;
 use IntegerNet\InventoryApi\Domain\Process\QtyChanged;
 use IntegerNet\InventoryApi\Domain\Process\QtySet;
@@ -14,13 +15,14 @@ class RouterFactory
 {
     public static function create(): Router
     {
-        $eventBus = new EventBus();
+        $messageDispatcher = new SubscribableMessageDispatcher();
         $inventory = new Inventory();
-        $eventBus->subscribe(QtyChanged::class, $inventory->qtyChangedHandler());
-        $eventBus->subscribe(QtySet::class, $inventory->qtySetHandler());
+        $messageDispatcher->subscribe(QtyChanged::class, $inventory->qtyChangedHandler());
+        $messageDispatcher->subscribe(QtySet::class, $inventory->qtySetHandler());
+        $eventDispatcher = new MessageDispatchingEventDispatcher($messageDispatcher);
         $router = new Router(
             new Controller\IsInStockController($inventory),
-            new Controller\EventController($eventBus)
+            new Controller\EventController($eventDispatcher)
         );
         return $router;
     }

@@ -5,7 +5,7 @@ namespace IntegerNet\InventoryApi\Domain;
 
 use IntegerNet\InventoryApi\Domain\Process\QtyChanged as QtyHasChanged;
 use IntegerNet\InventoryApi\Domain\Process\QtySet as QtyHasBeenSet;
-use IntegerNet\InventoryApi\Application\EventBus;
+use IntegerNet\InventoryApi\Application\SubscribableMessageDispatcher;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\MessageDispatchingEventDispatcher;
 use PHPUnit\Framework\TestCase;
@@ -22,11 +22,11 @@ class InventoryTest extends TestCase
     protected function setUp(): void
     {
         $this->inventory = new Inventory();
-        $eventBus = new EventBus();
-        $eventBus->subscribe(QtyHasBeenSet::class, $this->inventory->qtySetHandler());
-        $eventBus->subscribe(QtyHasChanged::class, $this->inventory->qtyChangedHandler());
+        $messageDispatcher = new SubscribableMessageDispatcher();
+        $messageDispatcher->subscribe(QtyHasBeenSet::class, $this->inventory->qtySetHandler());
+        $messageDispatcher->subscribe(QtyHasChanged::class, $this->inventory->qtyChangedHandler());
         $this->eventDispatcher = new MessageDispatchingEventDispatcher(
-            $eventBus,
+            $messageDispatcher,
         );
     }
 

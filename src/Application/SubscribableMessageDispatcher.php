@@ -5,8 +5,23 @@ namespace IntegerNet\InventoryApi\Application;
 
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageDispatcher;
+use EventSauce\EventSourcing\MessageDispatchingEventDispatcher;
 
-class EventBus implements MessageDispatcher
+/**
+ * Message dispatcher used by the event sauce event dispatcher. Event handlers can subscribe to events by event class
+ *
+ * Instantiate:
+ *
+ *     $messageDispatcher = new SubscribableMessageDispatcher();
+ *
+ *     // ... subscribe to events at $messageDispatcher, here or later ...
+ *
+ *     $eventDispatcher = new MessageDispatchingEventDispatcher($messageDispatcher);
+ *
+ *     // dispatch events with $eventDispatcher
+ *
+ */
+class SubscribableMessageDispatcher implements MessageDispatcher
 {
     /**
      * @var callable[]
@@ -16,14 +31,6 @@ class EventBus implements MessageDispatcher
     public function subscribe(string $eventClass, callable $eventHandler): void
     {
         $this->subscribers[$eventClass][] = $eventHandler;
-    }
-
-    /**
-     * @deprecated use dispatch() of MessageDispatcher interface
-     */
-    public function _dispatch(object $event): void
-    {
-        $this->dispatchEvent($event);
     }
 
     public function dispatch(Message ...$messages)

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Application;
 
+use EventSauce\EventSourcing\Message;
 use IntegerNet\InventoryApi\CallableMock;
 use IntegerNet\InventoryApi\Domain\Process\QtyChanged;
 use IntegerNet\InventoryApi\Domain\Process\QtySet;
@@ -11,13 +12,13 @@ use PHPUnit\Framework\TestCase;
 class EventBusTest extends TestCase
 {
     /**
-     * @var EventBus
+     * @var SubscribableMessageDispatcher
      */
     private $eventBus;
 
     protected function setUp(): void
     {
-        $this->eventBus = new EventBus();
+        $this->eventBus = new SubscribableMessageDispatcher();
     }
 
     public function testDispatchesEventsToObservers()
@@ -49,7 +50,7 @@ class EventBusTest extends TestCase
 
     private function whenEventIsDispatched($event): void
     {
-        $this->eventBus->_dispatch($event);
+        $this->eventBus->dispatch(new Message($event));
     }
 
     private function thenObserverHasBeenCalledWith($event, CallableMock $observer): void
