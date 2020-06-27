@@ -7,8 +7,6 @@ use EventSauce\EventSourcing\AggregateRootRepository;
 use IntegerNet\InventoryApi\Application\Service\ChangeQty;
 use IntegerNet\InventoryApi\Application\Service\SetQty;
 use IntegerNet\InventoryApi\Domain\Inventory;
-use IntegerNet\InventoryApi\Domain\InventoryId;
-use IntegerNet\InventoryApi\Domain\InventoryRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
