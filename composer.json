@@ -28,7 +28,8 @@
     "psr/http-server-handler": "1.0.1",
     "ext-json": "*",
     "consolidation/robo": "^2.1",
-    "eventsauce/eventsauce": "^0.8.1"
+    "eventsauce/eventsauce": "^0.8.1",
+    "ringcentral/psr7": "^1.2.2"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
