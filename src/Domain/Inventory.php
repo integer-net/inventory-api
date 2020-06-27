@@ -13,37 +13,6 @@ class Inventory
      */
     private $items = [];
 
-    /**
-     * Event handler that takes a QtyChanged event and updates the inventory
-     *
-     * @todo extract each event handler to a service
-     * @return callable
-     */
-    public function qtyChangedHandler(): callable
-    {
-        return function (QtyHasChanged $event) {
-            $this->getBySku($event->sku())->addQty($event->difference());
-        };
-    }
-
-    /**
-     * Event handler that takes a QtySet event and updates the inventory
-     *
-     * @return callable
-     */
-    public function qtySetHandler(): callable
-    {
-        return function (QtyHasBeenSet $event) {
-            if (! $this->hasSku($event->sku())) {
-                $this->items[$event->sku()] = new InventoryItem(
-                    InventoryItemId::new(),
-                    $event->sku(), 0
-                );
-            }
-            $this->getBySku($event->sku())->setQty($event->qty());
-        };
-    }
-
     public function hasSku(string $sku): bool
     {
         return isset($this->items[$sku]);
@@ -52,5 +21,22 @@ class Inventory
     public function getBySku(string $sku): InventoryItem
     {
         return $this->items[$sku];
+    }
+
+    /**
+     * Creates new inventory item. There must be no existing item with the given SKU
+     *
+     * @param string $sku
+     * @param int $qty
+     */
+    public function createItem(string $sku, int $qty): void
+    {
+        if ($this->hasSku($sku)) {
+            throw new \DomainException('Tried to create an item that already exists (duplicate SKU)');
+        }
+        $newInventoryItem = new InventoryItem(
+            InventoryItemId::new(), $sku, $qty
+        );
+        $this->items[$newInventoryItem->sku()] = $newInventoryItem;
     }
 }

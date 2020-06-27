@@ -63,4 +63,9 @@ class InventoryItem implements AggregateRoot
     {
         return $this->qty;
     }
+
+    public function sku(): string
+    {
+        return $this->sku;
+    }
 }

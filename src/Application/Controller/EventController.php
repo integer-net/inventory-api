@@ -4,22 +4,28 @@ declare(strict_types=1);
 namespace IntegerNet\InventoryApi\Application\Controller;
 
 use EventSauce\EventSourcing\EventDispatcher;
+use IntegerNet\InventoryApi\Application\Service\ChangeQty;
+use IntegerNet\InventoryApi\Application\Service\SetQty;
 use IntegerNet\InventoryApi\Application\SubscribableMessageDispatcher;
+use IntegerNet\InventoryApi\Domain\Inventory;
 use IntegerNet\InventoryApi\Domain\Process\QtyChanged;
 use IntegerNet\InventoryApi\Domain\Process\QtySet;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @deprecated use inentory end points instead
+ */
 class EventController
 {
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
+    private EventDispatcher $eventDispatcher;
 
-    public function __construct(EventDispatcher $eventDispatcher)
+    private Inventory $inventory;
+
+    //TODO get inventory from inventory repository
+    public function __construct(Inventory $inventory)
     {
-        $this->eventDispatcher = $eventDispatcher;
+        $this->inventory = $inventory;
     }
 
     public function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
@@ -36,13 +42,17 @@ class EventController
         try {
             switch ($jsonRequest['name']) {
                 case 'qty_change':
-                    $this->eventDispatcher->dispatch(
-                        QtyChanged::fromPayload($jsonRequest['payload'])
+                    (new ChangeQty())->execute(
+                        $this->inventory,
+                        $jsonRequest['payload']['sku'],
+                        $jsonRequest['payload']['difference']
                     );
                     break;
                 case 'qty_set':
-                    $this->eventDispatcher->dispatch(
-                        QtySet::fromPayload($jsonRequest['payload'])
+                    (new SetQty())->execute(
+                        $this->inventory,
+                        $jsonRequest['payload']['sku'],
+                        $jsonRequest['payload']['qty']
                     );
                     break;
             }
