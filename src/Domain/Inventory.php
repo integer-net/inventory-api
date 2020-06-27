@@ -46,7 +46,7 @@ class Inventory implements AggregateRoot
         $this->items[$newInventoryItem->sku()] = $newInventoryItem;
     }
 
-    public function addQty(string $sku, int $difference)
+    public function addQty(string $sku, int $difference): void
     {
         $this->recordThat(QtyChanged::withSkuAndDifference($sku, $difference));
     }
@@ -54,7 +54,7 @@ class Inventory implements AggregateRoot
     /**
      * Used by EventSauce to apply/replay events
      */
-    public function applyQtyChanged(QtyChanged $event)
+    public function applyQtyChanged(QtyChanged $event): void
     {
         $sku = $event->sku();
         if (! $this->hasSku($sku)) {

@@ -23,7 +23,11 @@ class IsInStockController
         $skus = (array)($request->getQueryParams()['skus'] ?? []);
         $skus = array_map('strval', $skus);
         $result = (new GetStockStatus($this->inStockReadModel))->execute(...$skus);
+        $json = \json_encode($result);
+        if ($json === false) {
+            throw new \RuntimeException("Error encoding JSON: " . \json_last_error_msg());
+        }
 
-        return $response->withBody(stream_for(\json_encode($result)));
+        return $response->withBody(stream_for($json));
     }
 }

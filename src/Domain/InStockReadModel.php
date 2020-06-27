@@ -11,14 +11,17 @@ namespace IntegerNet\InventoryApi\Domain;
  */
 class InStockReadModel
 {
+    /**
+     * @var array<int>
+     */
     private array $qtys = [];
 
-    public function updateQty(string $sku, int $difference)
+    public function updateQty(string $sku, int $difference): void
     {
         $this->qtys[$sku] = ($this->qtys[$sku] ?? 0) + $difference;
     }
 
-    public function isInStock(string $sku)
+    public function isInStock(string $sku): bool
     {
         if (! isset($this->qtys[$sku])) {
             throw InventoryItemNotFound::withSku($sku);

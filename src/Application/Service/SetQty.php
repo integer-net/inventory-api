@@ -7,7 +7,7 @@ use IntegerNet\InventoryApi\Domain\Inventory;
 
 class SetQty
 {
-    public function execute(Inventory $inventory, string $sku, int $qty)
+    public function execute(Inventory $inventory, string $sku, int $qty): void
     {
         if (!$inventory->hasSku($sku)) {
             $inventory->createItem($sku, 0);

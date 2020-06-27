@@ -20,7 +20,7 @@ class InStockProjection implements Consumer
         $this->inStockReadModel = $inStockReadModel;
     }
 
-    public function handle(Message $message)
+    public function handle(Message $message): void
     {
         $event = $message->event();
 

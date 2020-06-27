@@ -67,7 +67,11 @@ class Router implements RequestHandlerInterface
             }
             return $response;
         } catch (\Exception $e) {
-            return $response->withStatus(500)->withBody(stream_for(\json_encode(['message' => $e->getMessage()])));
+            $json = \json_encode(['message' => $e->getMessage()]);
+            if ($json === false) {
+                $json = '{"message": "An error occured. Then an error occured while rendering the error response"}';
+            }
+            return $response->withStatus(500)->withBody(stream_for($json));
         }
     }
 }

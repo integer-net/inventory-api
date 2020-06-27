@@ -70,6 +70,9 @@ class EventController
         }
 
         $json = \json_encode($result);
+        if ($json === false) {
+            throw new \RuntimeException("Error encoding JSON: " . \json_last_error_msg());
+        }
         $response = $response->withBody(
             \RingCentral\Psr7\stream_for($json)
         );
