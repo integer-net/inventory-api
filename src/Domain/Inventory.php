@@ -27,17 +27,18 @@ class Inventory implements AggregateRoot
     }
 
     /**
-     * @todo to ensure consistency, we must only allow changing items through the root, where the events are dispatched
-     *       for queries like is_in_stock we should create a projection with a read model instead of using the inventory
-     *       directly. See https://eventsauce.io/docs/reacting-to-events/projections-and-read-models/
-     * @param string $sku
-     * @return InventoryItem
+     * Returns a read-only inventory item, can be used safely outside of the Inventory aggregate
      */
-    public function getBySku(string $sku): InventoryItem
+    public function getBySku(string $sku): InventoryItemInterface
     {
-        return $this->getItemBySku($sku);
+        return new InventoryItemReadModel($this->getItemBySku($sku));
     }
 
+    /**
+     * Returns the whole mutable inventory item model
+     *
+     * @todo consider making InventoryItem immutable instead of using different read/write models
+     */
     private function getItemBySku(string $sku): InventoryItem
     {
         return $this->items[$sku];

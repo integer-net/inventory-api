@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Domain;
 
-class InventoryItem
+class InventoryItem implements InventoryItemInterface
 {
     /**
      * @var string
@@ -25,7 +25,7 @@ class InventoryItem
         $this->qty += $difference;
     }
 
-    public function isInStock()
+    public function isInStock(): bool
     {
         return $this->qty > 0;
     }
