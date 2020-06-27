@@ -1,0 +1,22 @@
+paths:
+  - ./src
+layers:
+  - name: Application
+    collectors:
+      - type: directory
+        regex: src/Application/
+  - name: Infrastructure
+    collectors:
+      - type: directory
+        regex: src/Infrastructure/
+  - name: Domain
+    collectors:
+      - type: directory
+        regex: src/Domain/
+ruleset:
+  Application:
+    - Domain
+    - Infrastructure
+  Infrastructure:
+    - Domain
+  Repository:
