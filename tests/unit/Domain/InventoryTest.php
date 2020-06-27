@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Domain;
 
+use IntegerNet\InventoryApi\Infrastructure\InMemoryInventoryRepository;
 use PHPUnit\Framework\TestCase;
 
 class InventoryTest extends TestCase
@@ -14,7 +15,7 @@ class InventoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->inventory = new Inventory();
+        $this->inventory = (new InMemoryInventoryRepository())->getDefaultInventory();
     }
 
 }

@@ -5,6 +5,7 @@ namespace IntegerNet\InventoryApi\Application;
 
 use IntegerNet\InventoryApi\Application\Service\ChangeQty;
 use IntegerNet\InventoryApi\Domain\Inventory;
+use IntegerNet\InventoryApi\Infrastructure\InMemoryInventoryRepository;
 use PHPUnit\Framework\TestCase;
 
 class ChangeQtyApplicationServiceTest extends TestCase
@@ -15,7 +16,7 @@ class ChangeQtyApplicationServiceTest extends TestCase
     protected function setUp(): void
     {
         $this->changeQty = new ChangeQty();
-        $this->inventory = new Inventory();
+        $this->inventory = (new InMemoryInventoryRepository())->getDefaultInventory();
     }
 
     /**

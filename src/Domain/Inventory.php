@@ -3,15 +3,22 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Domain;
 
-use IntegerNet\InventoryApi\Domain\Process\QtyChanged as QtyHasChanged;
-use IntegerNet\InventoryApi\Domain\Process\QtySet as QtyHasBeenSet;
+use EventSauce\EventSourcing\AggregateRoot;
+use EventSauce\EventSourcing\AggregateRootBehaviour;
 
-class Inventory
+class Inventory implements AggregateRoot
 {
+    use AggregateRootBehaviour;
+
     /**
      * @var InventoryItem[]
      */
     private $items = [];
+
+    public static function new(InventoryId $id): self
+    {
+        return new self($id);
+    }
 
     public function hasSku(string $sku): bool
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace IntegerNet\InventoryApi\Infrastructure;
 
 use IntegerNet\InventoryApi\Domain\Inventory;
+use IntegerNet\InventoryApi\Domain\InventoryId;
 use IntegerNet\InventoryApi\Domain\InventoryRepository;
 
 /**
@@ -15,7 +16,7 @@ class InMemoryInventoryRepository implements InventoryRepository
 
     public function __construct()
     {
-        $this->defaultInventory = new Inventory();
+        $this->defaultInventory = Inventory::new(InventoryId::default());
     }
 
     public function getDefaultInventory(): Inventory
