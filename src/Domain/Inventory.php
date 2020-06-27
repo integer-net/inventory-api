@@ -26,23 +26,11 @@ class Inventory implements AggregateRoot
         return isset($this->items[$sku]);
     }
 
-    /**
-     * Returns a read-only inventory item, can be used safely outside of the Inventory aggregate
-     */
-    public function getBySku(string $sku): InventoryItemInterface
-    {
-        return new InventoryItemReadModel($this->getItemBySku($sku));
-    }
-
-    /**
-     * Returns the whole mutable inventory item model
-     *
-     * @todo consider making InventoryItem immutable instead of using different read/write models
-     */
-    private function getItemBySku(string $sku): InventoryItem
+    public function getItemBySku(string $sku): InventoryItem
     {
         return $this->items[$sku];
     }
+
     /**
      * Creates new inventory item. There must be no existing item with the given SKU
      *
@@ -70,8 +58,9 @@ class Inventory implements AggregateRoot
     {
         $sku = $event->sku();
         if (! $this->hasSku($sku)) {
-            $this->createItem($sku, 0);
+            $this->createItem($sku, $event->difference());
+        } else {
+            $this->items[$sku] = $this->items[$sku]->withAddedQty($event->difference());
         }
-        $this->getItemBySku($sku)->addQty($event->difference());
     }
 }

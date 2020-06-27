@@ -112,8 +112,16 @@ Resolution:
 
 #### Eventual Consistency
 
-For eventual consistency the QtySet event is a problem. I.e. when events are stored asynchronously, a different order should not cause problems, and in the end the system is consistent. This only works if we always store increments (QtyChanged events). I had the idea to allow the service to run in two modes: primary (eventual consistent), or secondary (not eventual consistant, external system is source of truth). So that if Magento is the source of truth and updates qtys via indexer, we allow QtySet events. On second thought, it should be possible to always have eventual consistency, if we handle "qty set" requests like this: store a QtyChanged event with the difference between requested qty and in-memory qty
+Decision: how to ensure eventual consistency?
+
+For eventual consistency the QtySet event is a problem. I.e. when events are stored asynchronously, a different order should not cause problems, and in the end the system is consistent.
+
+This only works if we always store increments (QtyChanged events). I had the idea to allow the service to run in two modes: primary (eventual consistent), or secondary (not eventual consistant, external system is source of truth). So that if Magento is the source of truth and updates qtys via indexer, we allow QtySet events.
+
+On second thought, it should be possible to always have eventual consistency, if we handle "qty set" requests like this: store a QtyChanged event with the difference between requested qty and in-memory qty
+
+Resolution: resort to safe QtyChanged events only
 
 #### Next refactoring steps
 
-- make InventoryItem an immutable value object, that can be passed around safely
+- design a API with concrete methods as replacment for the `EventController`

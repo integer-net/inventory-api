@@ -26,6 +26,6 @@ class SetQtyApplicationServiceTest extends TestCase
     {
         $this->setQty->execute($this->inventory, 'sku-1', 5);
         $this->setQty->execute($this->inventory, 'sku-1', 10);
-        $this->assertEquals(10, $this->inventory->getBySku('sku-1')->qty(), 'QTY should be saved in inventory');
+        $this->assertEquals(10, $this->inventory->getItemBySku('sku-1')->qty(), 'QTY should be saved in inventory');
     }
 }

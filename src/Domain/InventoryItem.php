@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace IntegerNet\InventoryApi\Domain;
 
-class InventoryItem implements InventoryItemInterface
+class InventoryItem
 {
     /**
      * @var string
@@ -20,11 +20,15 @@ class InventoryItem implements InventoryItemInterface
         $this->qty = $qty;
     }
 
-    public function addQty(int $difference): void
+    public function withAddedQty(int $difference): self
     {
-        $this->qty += $difference;
+        return new self($this->sku, $this->qty + $difference);
     }
 
+    /**
+     * @todo we will probably need an InStockPolicy tied to the Inventory which determines when an item is considered
+     *       in stock, e.g. with a different threshold than 0
+     */
     public function isInStock(): bool
     {
         return $this->qty > 0;

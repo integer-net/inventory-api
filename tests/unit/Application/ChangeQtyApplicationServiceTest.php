@@ -26,6 +26,6 @@ class ChangeQtyApplicationServiceTest extends TestCase
     {
         $this->changeQty->execute($this->inventory, 'sku-1', 10);
         $this->changeQty->execute($this->inventory, 'sku-1', -3);
-        $this->assertEquals(7, $this->inventory->getBySku('sku-1')->qty(), 'QTY should be saved and updated in inventory');
+        $this->assertEquals(7, $this->inventory->getItemBySku('sku-1')->qty(), 'QTY should be saved and updated in inventory');
     }
 }

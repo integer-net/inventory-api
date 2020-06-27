@@ -26,7 +26,7 @@ class InventoryTest extends TestCase
     {
         $this->inventory->addQty(self::SKU, 12);
         $this->inventory->addQty(self::SKU, 30);
-        $this->assertEquals(42, $this->inventory->getBySku(self::SKU)->qty());
+        $this->assertEquals(42, $this->inventory->getItemBySku(self::SKU)->qty());
     }
 
     /**
