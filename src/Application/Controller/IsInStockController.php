@@ -7,6 +7,7 @@ use EventSauce\EventSourcing\AggregateRootRepository;
 use IntegerNet\InventoryApi\Domain\InStockReadModel;
 use IntegerNet\InventoryApi\Domain\Inventory;
 use IntegerNet\InventoryApi\Domain\InventoryId;
+use IntegerNet\InventoryApi\Domain\InventoryItemNotFound;
 use IntegerNet\InventoryApi\Domain\InventoryRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,10 +28,18 @@ class IsInStockController
 
         //TODO extract the following statement to a service
         $result = array_map(function ($sku) {
-                return [
-                    'sku' => $sku,
-                    'is_in_stock' => $this->isInStock($sku),
-                ];
+                try {
+                    return [
+                        'sku' => $sku,
+                        'is_in_stock' => $this->isInStock($sku),
+                    ];
+                } catch (InventoryItemNotFound $e) {
+                    return [
+                        'sku' => $sku,
+                        'is_in_stock' => false,
+                        'error' => true,
+                    ];
+                }
             },
             $skus
         );

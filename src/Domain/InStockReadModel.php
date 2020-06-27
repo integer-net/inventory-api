@@ -20,7 +20,9 @@ class InStockReadModel
 
     public function isInStock(string $sku)
     {
-        //TODO throw exception if SKU not known?
+        if (! isset($this->qtys[$sku])) {
+            throw InventoryItemNotFound::withSku($sku);
+        }
         $qty = $this->qtys[$sku] ?? 0;
         return (new InventoryItem($sku, $qty))->isInStock();
     }
