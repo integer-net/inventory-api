@@ -5,7 +5,7 @@ namespace IntegerNet\InventoryApi\Application;
 
 use IntegerNet\InventoryApi\Application\Service\SetQty;
 use IntegerNet\InventoryApi\Domain\Inventory;
-use IntegerNet\InventoryApi\Infrastructure\InMemoryInventoryRepository;
+use IntegerNet\InventoryApi\Domain\InventoryId;
 use PHPUnit\Framework\TestCase;
 
 class SetQtyApplicationServiceTest extends TestCase
@@ -16,7 +16,7 @@ class SetQtyApplicationServiceTest extends TestCase
     protected function setUp(): void
     {
         $this->setQty = new SetQty();
-        $this->inventory = (new InMemoryInventoryRepository())->getDefaultInventory();
+        $this->inventory = Inventory::new(InventoryId::default());
     }
 
     /**

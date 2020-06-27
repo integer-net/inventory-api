@@ -8,7 +8,6 @@ use EventSauce\EventSourcing\InMemoryMessageRepository;
 use EventSauce\EventSourcing\SynchronousMessageDispatcher;
 use IntegerNet\InventoryApi\Domain\Inventory;
 use IntegerNet\InventoryApi\Domain\InventoryId;
-use IntegerNet\InventoryApi\Infrastructure\InMemoryInventoryRepository;
 
 /**
  * The router is the main application entry point. This factory is wiring its dependencies
