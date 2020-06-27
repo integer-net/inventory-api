@@ -9,10 +9,6 @@ class ChangeQty
 {
     public function execute(Inventory $inventory, string $sku, int $difference)
     {
-        if (!$inventory->hasSku($sku)) {
-            $inventory->createItem($sku, 0);
-        }
-        $inventory->getBySku($sku)->addQty($difference);
-
+        $inventory->addQty($sku, $difference);
     }
 }

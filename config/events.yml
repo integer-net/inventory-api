@@ -9,8 +9,3 @@ events:
     fields:
       sku: string
       difference: int
-  QtySet:
-    fields:
-      sku: string
-      qty: int
-

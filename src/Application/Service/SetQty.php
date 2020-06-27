@@ -15,6 +15,6 @@ class SetQty
 
         $inventoryItem = $inventory->getBySku($sku);
         $difference = $qty - $inventoryItem->qty();
-        $inventoryItem->addQty($difference);
+        $inventory->addQty($sku, $difference);
     }
 }
