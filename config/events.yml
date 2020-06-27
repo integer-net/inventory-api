@@ -5,7 +5,7 @@
 namespace: IntegerNet\InventoryApi\Domain\Process
 
 events:
-  QtyChange:
+  QtyChanged:
     fields:
       sku: string
       difference: int

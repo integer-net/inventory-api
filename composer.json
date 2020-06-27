@@ -6,7 +6,10 @@
   "autoload": {
     "psr-4": {
       "IntegerNet\\InventoryApi\\": "src/"
-    }
+    },
+    "files": [
+      "generated/events.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

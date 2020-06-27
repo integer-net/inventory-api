@@ -6,7 +6,7 @@ namespace IntegerNet\InventoryApi\Domain\Process;
 
 use EventSauce\EventSourcing\Serialization\SerializablePayload;
 
-final class QtyChange implements SerializablePayload
+final class QtyChanged implements SerializablePayload
 {
     private string $sku;
 
@@ -32,7 +32,7 @@ final class QtyChange implements SerializablePayload
 
     public static function fromPayload(array $payload): SerializablePayload
     {
-        return new QtyChange(
+        return new QtyChanged(
             (string) $payload['sku'],
             (int) $payload['difference']
         );
@@ -49,9 +49,9 @@ final class QtyChange implements SerializablePayload
     /**
      * @codeCoverageIgnore
      */
-    public static function withSkuAndDifference(string $sku, int $difference): QtyChange
+    public static function withSkuAndDifference(string $sku, int $difference): QtyChanged
     {
-        return new QtyChange(
+        return new QtyChanged(
             $sku,
             $difference
         );

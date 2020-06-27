@@ -32,7 +32,10 @@ class Inventory
     {
         return function (QtySet $event) {
             if (! $this->hasSku($event->sku())) {
-                $this->items[$event->sku()] = new InventoryItem($event->sku(), 0);
+                $this->items[$event->sku()] = new InventoryItem(
+                    InventoryItemId::new(),
+                    $event->sku(), 0
+                );
             }
             $this->getBySku($event->sku())->setQty($event->qty());
         };
