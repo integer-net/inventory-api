@@ -1,5 +1,9 @@
 # IntegerNet Inventory API
 
+[![Build Status][ico-travis]][link-travis]
+[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
+[![Quality Score][ico-code-quality]][link-code-quality]
+
 Current status: Proof of Concept
 
 ## Installation
@@ -125,3 +129,19 @@ Resolution: resort to safe QtyChanged events only
 #### Next refactoring steps
 
 - design a API with concrete methods as replacment for the `EventController`
+
+
+[ico-version]: https://img.shields.io/packagist/v/integer-net/inventory-api.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/integer-net/inventory-api/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/integer-net/inventory-api.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/integer-net/inventory-api.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/integer-net/inventory-api.svg?style=flat-square
+
+[link-packagist]: https://packagist.org/packages/integer-net/inventory-api
+[link-travis]: https://travis-ci.org/integer-net/inventory-api
+[link-scrutinizer]: https://scrutinizer-ci.com/g/integer-net/inventory-api/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/integer-net/inventory-api
+[link-downloads]: https://packagist.org/packages/integer-net/inventory-api
+[link-author]: https://github.com/schmengler
+[link-contributors]: ../../contributors

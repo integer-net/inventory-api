@@ -63,7 +63,6 @@ class EventController
                     break;
             }
             $this->inventoryRepository->persist($this->getInventory());
-
         } catch (\Exception $e) {
             $result['success'] = false;
             $result['message'] = $e->getMessage();
@@ -71,12 +70,14 @@ class EventController
         }
 
         $json = \json_encode($result);
+        if ($json === false) {
+            throw new \RuntimeException("Error encoding JSON: " . \json_last_error_msg());
+        }
         $response = $response->withBody(
             \RingCentral\Psr7\stream_for($json)
         );
 
         return $response;
-
     }
 
     private function getInventory(): Inventory

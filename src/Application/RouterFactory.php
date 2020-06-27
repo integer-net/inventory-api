@@ -26,6 +26,7 @@ class RouterFactory
                 new InStockProjection($inStockReadModel)
             )
         );
+        /** @var Inventory $defaultInventory */
         $defaultInventory = $inventoryRepository->retrieve(InventoryId::default());
         $router = new Router(
             new Controller\IsInStockController($inStockReadModel),

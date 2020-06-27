@@ -5,7 +5,7 @@ namespace IntegerNet\InventoryApi\Domain;
 
 use EventSauce\EventSourcing\AggregateRootId;
 
-class InventoryId implements AggregateRootId
+final class InventoryId implements AggregateRootId
 {
     private const DEFAULT = 'default';
 
@@ -21,14 +21,16 @@ class InventoryId implements AggregateRootId
         return $this->id;
     }
 
+    /**
+     * @return static
+     */
     public static function fromString(string $aggregateRootId): self
     {
-        return new self($aggregateRootId);
+        return new static($aggregateRootId);
     }
 
     public static function default(): self
     {
         return self::fromString(self::DEFAULT);
     }
-
 }

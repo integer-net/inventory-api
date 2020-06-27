@@ -7,7 +7,7 @@ use IntegerNet\InventoryApi\Domain\Inventory;
 
 class ChangeQty
 {
-    public function execute(Inventory $inventory, string $sku, int $difference)
+    public function execute(Inventory $inventory, string $sku, int $difference): void
     {
         $inventory->addQty($sku, $difference);
     }
