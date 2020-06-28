@@ -161,7 +161,7 @@ which again does not work that well with REST. Or does it?
 ```
 PUT /inventory/{inventory_id}/item/{sku} {sku: X, qty: X}
 PATCH /inventory/{inventory_id}/item/{sku}/qty {diff: X}
-PATCH /inventory/{inventory_id} [{sku: X, qty: X}, {sku: Y, qty: Y]
+PATCH /inventory/{inventory_id} {items: [{sku: X, qty: X}, {sku: Y, qty: Y}]}
 ```
 
 - PUT is used to *create or update* a resource with a client defined URI (the SKU).

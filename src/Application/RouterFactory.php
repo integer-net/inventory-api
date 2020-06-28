@@ -43,6 +43,11 @@ class RouterFactory
                 $this->defaultInventory,
                 new ChangeQty()
             ),
+            new Controller\InventoryPatchController(
+                $inventoryRepository,
+                $this->defaultInventory,
+                new SetQty()
+            ),
             new Controller\EventController($inventoryRepository, $this->defaultInventory)
         );
         return $router;

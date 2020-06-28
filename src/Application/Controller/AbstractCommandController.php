@@ -70,6 +70,10 @@ class AbstractCommandController
             $result['request'] = $jsonRequest;
             try {
                 $command($jsonRequest);
+            } catch (\InvalidArgumentException $e) {
+                $result['success'] = false;
+                $result['message'] = $e->getMessage();
+                $response = $response->withStatus(400);
             } catch (\Exception $e) {
                 $result['success'] = false;
                 $result['message'] = $e->getMessage();
