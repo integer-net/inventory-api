@@ -16,7 +16,7 @@
                 "conditions": []
             },
             {
-                "action": "vendor/bin/deptrac analyze config/deptrac/layers.yml",
+                "action": "vendor/bin/deptrac analyze --formatter-console-report-uncovered=true config/deptrac/layers.yml",
                 "options": [],
                 "conditions": []
             },

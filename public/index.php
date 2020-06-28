@@ -9,7 +9,7 @@ use React\Socket\Server as SocketServer;
 require __DIR__ . '/../vendor/autoload.php';
 
 $loop = EventLoopFactory::create();
-$router = RouterFactory::create();
+$router = (new RouterFactory)->create();
 $server = new HttpServer(function (ServerRequestInterface $request) use ($router) {
     return $router->handle($request);
 });

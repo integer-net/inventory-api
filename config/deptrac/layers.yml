@@ -3,16 +3,24 @@ paths:
 layers:
   - name: Application
     collectors:
-      - type: directory
-        regex: src/Application/
+      - type: className
+        regex: ^IntegerNet\\InventoryApi\\Application\\
   - name: Infrastructure
     collectors:
-      - type: directory
-        regex: src/Infrastructure/
+      - type: className
+        regex: ^IntegerNet\\InventoryApi\\Infrastructure\\
+      - type: className
+        regex: ^Psr
+      - type: className
+        regex: ^React
+      - type: className
+        regex: ^RingCentral
   - name: Domain
     collectors:
-      - type: directory
-        regex: src/Domain/
+      - type: className
+        regex: ^IntegerNet\\InventoryApi\\Domain\\
+      - type: className
+        regex: ^EventSauce
 ruleset:
   Application:
     - Domain

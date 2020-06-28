@@ -16,7 +16,7 @@ class GetStockStatus
     }
 
     /**
-     * @param string ...$skus
+     * @param  string ...$skus
      * @return array[] with items in the form [sku => string, is_in_stock => bool, error => bool]
      */
     public function execute(string ...$skus): array
