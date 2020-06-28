@@ -179,7 +179,7 @@ If the actions are links in the item resource, this would even be good REST: htt
 
 #### Next refactoring steps
 
-- design a API with concrete methods as replacment for the `EventController`
+- use a routing library, e.g. nikic/fast-route
 
 
 [ico-version]: https://img.shields.io/packagist/v/integer-net/inventory-api.svg?style=flat-square
