@@ -9,7 +9,7 @@ use IntegerNet\InventoryApi\Domain\Inventory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-// PATCH /inventory/{inventory_id}/item/{sku}/qty {difference: X}
+// PATCH /inventory/{inventory_id} {items: [ {sku: X, qty: X}, ... ]}
 class InventoryPatchController extends AbstractCommandController
 {
     private SetQty $setQty;

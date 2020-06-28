@@ -61,7 +61,46 @@ Response
 ]
 ```
 
-Update stock quty:
+Increase/decrease stock qty for single item (for nonexisting sku, item is created)
+
+```
+PATCH /inventory/default/item/{sku}/qty
+{
+    'difference' => 100
+}
+``` 
+
+Set stock qty for single item (for nonexisting sku, item is created):
+
+```
+PUT /inventory/default/item/foobar
+{
+    'sku' => 'foobar',
+    'qty' => 123
+}
+```
+
+Set stock qty for multiple items (for nonexisting sku, items are created):
+
+```
+PATCH /inventory/default {items: [ {sku: X, qty: X}, ... ]}
+{
+    'items' => [
+        {
+            'sku' => 'sku-1',
+            'qty' => 1000,
+        },
+        {
+            'sku' => 'sku-2',
+            'qty' => 1000,
+        },
+    ]
+}
+```
+
+### Deprecated endpoint `/event`
+
+Update stock qty:
 
 ```
 POST /event
