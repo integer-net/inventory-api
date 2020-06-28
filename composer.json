@@ -13,7 +13,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "IntegerNet\\InventoryApi\\": "tests/src/"
+      "IntegerNet\\InventoryApi\\": ["tests/src/", "tests/unit", "tests/integration"]
     }
   },
   "authors": [

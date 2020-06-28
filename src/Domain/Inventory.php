@@ -28,6 +28,9 @@ class Inventory implements AggregateRoot
 
     public function getItemBySku(string $sku): InventoryItem
     {
+        if (!$this->hasSku($sku)) {
+            throw InventoryItemNotFound::withSku($sku);
+        }
         return $this->items[$sku];
     }
 
@@ -35,7 +38,7 @@ class Inventory implements AggregateRoot
      * Creates new inventory item. There must be no existing item with the given SKU
      *
      * @param string $sku
-     * @param int $qty
+     * @param int    $qty
      */
     public function createItem(string $sku, int $qty): void
     {

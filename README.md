@@ -126,6 +126,37 @@ On second thought, it should be possible to always have eventual consistency, if
 
 Resolution: resort to safe QtyChanged events only
 
+#### API design
+
+**Decision:** should we follow REST?
+
+The usual `POST /inventory/{inventory_id}/item/{sku}` does not work well when we want to do things like "add X", or eventually "reserve X", "buy X", "restock X".
+
+It only makes sense for the "set qty" approach, that is used if the InventoryApi is a secondary system,
+e.g. updated by a Magento indexer. But even then, it is preferred to update items in batches,
+which again does not work that well with REST. Or does it?
+
+**Resolution:**
+
+```
+PUT /inventory/{inventory_id}/item/{sku} {sku: X, qty: X}
+PATCH /inventory/{inventory_id}/item/{sku}/qty {diff: X}
+PATCH /inventory/{inventory_id} [{sku: X, qty: X}, {sku: Y, qty: Y]
+```
+
+- PUT is used to *create or update* a resource with a client defined URI (the SKU).
+- PATCH requests are used for partial changes
+
+For later, possible semantic actions:
+```
+POST /inventory/{inventory_id}/item/{sku}/reserve
+POST /inventory/{inventory_id}/item/{sku}/buy
+POST /inventory/{inventory_id}/item/{sku}/restock
+```
+
+If the actions are links in the item resource, this would even be good REST: https://softwareengineering.stackexchange.com/a/338669/120379
+
+
 #### Next refactoring steps
 
 - design a API with concrete methods as replacment for the `EventController`
