@@ -98,9 +98,29 @@ abstract class AbstractControllerTest extends TestCase
     protected function then_item_should_be_in_inventory_with(string $sku, int $expectedQty): void
     {
         $this->assertEquals(
-        $expectedQty,
-        $this->defaultInventory->getItemBySku($sku)->qty(),
-        'Item should be in inventory with qty ' . $expectedQty . ''
-    );
+            $expectedQty,
+            $this->defaultInventory->getItemBySku($sku)->qty(),
+            'Item should be in inventory with qty ' . $expectedQty . ''
+        );
+    }
+
+    protected function when_get_successful($path, $query)
+    {
+        $this->get($path, $query, 200);
+        $this->assertEquals(
+            'application/json',
+            $this->lastResponse->getHeaderLine('Content-type'),
+            'Content type should be JSON'
+        );
+    }
+
+    protected function when_put_successful(string $path, array $json): void
+    {
+        $this->put($path, $json, 200);
+        $this->assertEquals(
+            'application/json',
+            $this->lastResponse->getHeaderLine('Content-type'),
+            'Content type should be JSON'
+        );
     }
 }
