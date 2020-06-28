@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace IntegerNet\InventoryApi\Application\Controller;
 
 use EventSauce\EventSourcing\AggregateRootRepository;
-use IntegerNet\InventoryApi\Application\Service\SetQty;
+use IntegerNet\InventoryApi\Application\Service\ChangeQty;
 use IntegerNet\InventoryApi\Domain\Inventory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-// PUT /inventory/{inventory_id}/item/{sku} {sku: X, qty: X}
-class InventoryItemPutController
+// PATCH /inventory/{inventory_id}/item/{sku}/qty {difference: X}
+class InventoryItemQtyPatchController
 {
     /**
      * We pass the inventory here directly because it should have already been loaded at application startup and
@@ -25,20 +25,23 @@ class InventoryItemPutController
      */
     private AggregateRootRepository $inventoryRepository;
 
-    private SetQty $setQty;
+    private ChangeQty $changeQty;
 
     public function __construct(
         AggregateRootRepository $inventoryRepository,
         Inventory $inventory,
-        SetQty $setQty
+        ChangeQty $changeQty
     ) {
         $this->inventory = $inventory;
         $this->inventoryRepository = $inventoryRepository;
-        $this->setQty = $setQty;
+        $this->changeQty = $changeQty;
     }
 
-    public function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
-    {
+    public function execute(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        string $sku
+    ): ResponseInterface {
         $result = ['success' => true];
         $requestBody = $request->getBody()->getContents();
         $jsonRequest = \json_decode($requestBody, true);
@@ -49,10 +52,10 @@ class InventoryItemPutController
         }
         $result['request'] = $jsonRequest;
         try {
-            $this->setQty->execute(
+            $this->changeQty->execute(
                 $this->getInventory(),
-                $jsonRequest['sku'],
-                $jsonRequest['qty']
+                $sku,
+                $jsonRequest['difference']
             );
             $this->inventoryRepository->persist($this->getInventory());
         } catch (\Exception $e) {
@@ -71,7 +74,6 @@ class InventoryItemPutController
 
         return $response;
     }
-
     private function getInventory(): Inventory
     {
         return $this->inventory;

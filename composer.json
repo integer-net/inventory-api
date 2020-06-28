@@ -43,5 +43,9 @@
     "sensiolabs-de/deptrac-shim": "^0.8.0",
     "squizlabs/php_codesniffer": "^3.5",
     "vimeo/psalm": "^3.12"
+  },
+  "scripts":  {
+    "test": "vendor/bin/phpunit",
+    "fix": "vendor/bin/phpcbf --standard=psr2 src"
   }
 }

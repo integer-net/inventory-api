@@ -57,6 +57,18 @@ abstract class AbstractControllerTest extends TestCase
         );
     }
 
+    protected function patch(string $path, array $body, int $expectedStatusCode = 200): ResponseInterface
+    {
+        return $this->doRequest(
+            'PATCH',
+            $path,
+            $expectedStatusCode,
+            [],
+            ['Content-type' => 'application/json'],
+            \json_encode($body)
+        );
+    }
+
     protected function given_inventory_status(array $qtyBySku)
     {
         foreach ($qtyBySku as $sku => $qty) {
@@ -117,6 +129,16 @@ abstract class AbstractControllerTest extends TestCase
     protected function when_put_successful(string $path, array $json): void
     {
         $this->put($path, $json, 200);
+        $this->assertEquals(
+            'application/json',
+            $this->lastResponse->getHeaderLine('Content-type'),
+            'Content type should be JSON'
+        );
+    }
+
+    protected function when_patch_successful(string $path, array $json): void
+    {
+        $this->patch($path, $json, 200);
         $this->assertEquals(
             'application/json',
             $this->lastResponse->getHeaderLine('Content-type'),

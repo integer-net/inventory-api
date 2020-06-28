@@ -5,6 +5,7 @@ namespace IntegerNet\InventoryApi\Application;
 
 use IntegerNet\InventoryApi\Application\Controller\EventController;
 use IntegerNet\InventoryApi\Application\Controller\InventoryItemPutController;
+use IntegerNet\InventoryApi\Application\Controller\InventoryItemQtyPatchController;
 use IntegerNet\InventoryApi\Application\Controller\IsInStockController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,13 +18,16 @@ class Router implements RequestHandlerInterface
     private IsInStockController $isInStockController;
     private EventController $eventController;
     private InventoryItemPutController $inventoryItemPutController;
+    private InventoryItemQtyPatchController $inventoryItemQtyPatchController;
 
     public function __construct(
         IsInStockController $isInStockController,
         InventoryItemPutController $inventoryItemPutController,
+        InventoryItemQtyPatchController $inventoryItemQtyPatchController,
         EventController $eventController
     ) {
         $this->inventoryItemPutController = $inventoryItemPutController;
+        $this->inventoryItemQtyPatchController = $inventoryItemQtyPatchController;
         $this->isInStockController = $isInStockController;
         $this->eventController = $eventController;
     }
@@ -64,6 +68,16 @@ class Router implements RequestHandlerInterface
                     //TODO use pattern matching instead, e.g. 'inventory/{id}/item', maybe introduce a routing library
                     if (preg_match('{inventory/default/item}', $request->getUri()->getPath())) {
                         $response = $this->inventoryItemPutController->execute($request, $response);
+                    } else {
+                        $response = $response->withStatus(404)->withBody(
+                            \RingCentral\Psr7\stream_for('Endpoint not found: ' . $request->getUri()->getPath())
+                        );
+                    }
+                    break;
+                case 'PATCH':
+                    //TODO use pattern matching instead, e.g. 'inventory/{id}/item', maybe introduce a routing library
+                    if (preg_match('{inventory/default/item/([^/]+)/qty}', $request->getUri()->getPath(), $matches)) {
+                        $response = $this->inventoryItemQtyPatchController->execute($request, $response, $matches[1]);
                     } else {
                         $response = $response->withStatus(404)->withBody(
                             \RingCentral\Psr7\stream_for('Endpoint not found: ' . $request->getUri()->getPath())

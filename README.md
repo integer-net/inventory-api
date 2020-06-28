@@ -19,6 +19,26 @@ To run the server on localhost:8000, start the following as background process:
 php public/index.php 0.0.0.0:8000
 ```
 
+## Test
+
+To run the test suite:
+
+```
+composer test
+```
+
+Static analyzis is performed as pre-commit hook, you can do it manually:
+
+```
+vendor/bin/captainhook hook:pre-commit
+```
+
+If the message "PHPCBF CAN FIX THE MARKED SNIFF VIOLATIONS AUTOMATICALLY" appears, you can do so by:
+
+```
+composer fix
+```
+
 ## API Usage
 
 Request stock status for skus:

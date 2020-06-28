@@ -7,6 +7,7 @@ use EventSauce\EventSourcing\ConstructingAggregateRootRepository;
 use EventSauce\EventSourcing\InMemoryMessageRepository;
 use EventSauce\EventSourcing\SynchronousMessageDispatcher;
 use IntegerNet\InventoryApi\Application\Consumer\InStockProjection;
+use IntegerNet\InventoryApi\Application\Service\ChangeQty;
 use IntegerNet\InventoryApi\Application\Service\SetQty;
 use IntegerNet\InventoryApi\Domain\InStockReadModel;
 use IntegerNet\InventoryApi\Domain\Inventory;
@@ -30,13 +31,18 @@ class RouterFactory
             )
         );
         /**
- * @var Inventory $defaultInventory
-*/
+         * @var Inventory $defaultInventory
+         */
         $defaultInventory = $inventoryRepository->retrieve(InventoryId::default());
         $this->defaultInventory = $defaultInventory;
         $router = new Router(
             new Controller\IsInStockController($inStockReadModel),
             new Controller\InventoryItemPutController($inventoryRepository, $this->defaultInventory, new SetQty()),
+            new Controller\InventoryItemQtyPatchController(
+                $inventoryRepository,
+                $this->defaultInventory,
+                new ChangeQty()
+            ),
             new Controller\EventController($inventoryRepository, $this->defaultInventory)
         );
         return $router;
